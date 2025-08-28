@@ -1,7 +1,7 @@
 // backend/routes/account.js
 const express = require('express');
 const { authMiddleware } = require('../middleware');
-const { Account } = require('../db');
+const { User, Account } = require('../db');
 const { default: mongoose } = require('mongoose');
 
 const router = express.Router();
@@ -16,79 +16,73 @@ router.get("/balance", authMiddleware, async (req, res) => {
     })
 });
 
-// router.post("/transfer", authMiddleware, async (req, res) => {
-//     const session = await mongoose.startSession();
-
-//     session.startTransaction();
-//     const { amount, to } = req.body;
-
-//     // Fetch the accounts within the transaction
-//     const account = await Account.findOne({ userId: req.userId }).session(session);
-
-//     if (!account || account.balance < amount) {
-//         await session.abortTransaction();
-//         return res.status(400).json({
-//             message: "Insufficient balance"
-//         });
-//     }
-
-//     const toAccount = await Account.findOne({ userId: to }).session(session);
-
-//     if (!toAccount) {
-//         await session.abortTransaction();
-//         return res.status(400).json({
-//             message: "Invalid account"
-//         });
-//     }
-
-//     // Perform the transfer
-//     await Account.updateOne({ userId: req.userId }, { $inc: { balance: -amount } }).session(session);
-//     await Account.updateOne({ userId: to }, { $inc: { balance: amount } }).session(session);
-
-//     // Commit the transaction
-//     await session.commitTransaction();
-//     res.json({
-//         message: "Transfer successful"
-//     });
-// });
-
 router.post("/transfer", authMiddleware, async (req, res) => {
+    const { amount, to } = req.body;
     const session = await mongoose.startSession();
-    session.startTransaction();
 
     try {
-        const { amount, to } = req.body;
-
-        // Step 1: Deduct balance using findOneAndUpdate (atomic)
-        const account = await Account.findOneAndUpdate(
-            { userId: req.userId, balance: { $gte: amount } }, // Ensure sufficient balance
-            { $inc: { balance: -amount } },
-            { session, new: true }
-        );
-
-        if (!account) {
-            throw new Error("Insufficient balance");
+        session.startTransaction();
+        
+        // Ensure amount is a valid number
+        const amountNum = Number(amount);
+        if (isNaN(amountNum) || amountNum <= 0) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: "Invalid transfer amount" });
         }
 
-        // Step 2: Credit balance to recipient (atomic)
-        const toAccount = await Account.findOneAndUpdate(
-            { userId: to },
-            { $inc: { balance: amount } },
-            { session, new: true }
-        );
-
-        if (!toAccount) {
-            throw new Error("Invalid account");
+        // Step 1: Find the recipient user by username
+        const recipientUser = await User.findOne({ username: to }).session(session);
+        if (!recipientUser) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: "Recipient not found" });
         }
 
-        // Step 3: Commit transaction
+        // Step 2: Get recipient's account by userId
+        const recipientAccount = await Account.findOne({ userId: recipientUser._id }).session(session);
+        if (!recipientAccount) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: "Recipient account not found" });
+        }
+
+        // Step 3: Get sender's account
+        const senderAccount = await Account.findOne({ userId: req.userId }).session(session);
+        if (!senderAccount) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: "Sender account not found" });
+        }
+
+        // Step 4: Check balance
+        if (senderAccount.balance < amountNum) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: "Insufficient balance" });
+        }
+
+        // Step 5: Perform Transfer
+        senderAccount.balance -= amountNum;   // Correct numeric subtraction
+        recipientAccount.balance += amountNum; // Correct numeric addition
+
+        await senderAccount.save({ session });
+        await recipientAccount.save({ session });
+
+        // Commit transaction
         await session.commitTransaction();
-        res.json({ message: "Transfer successful" });
+        session.endSession();
+
+        res.status(200).json({
+            message: "Transfer successful",
+            senderBalance: senderAccount.balance,
+            recipientBalance: recipientAccount.balance
+        });
+
     } catch (error) {
         await session.abortTransaction();
-        res.status(400).json({ message: error.message });
-    } finally {
         session.endSession();
+        res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 });
 

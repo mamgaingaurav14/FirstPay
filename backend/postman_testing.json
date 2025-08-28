@@ -1,0 +1,29 @@
+
+{
+  "name":"user1",
+
+  "username": "testuser1@test.com",
+  "password": "123456",
+  "firstName": "Test",
+  "lastName": "User1",
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGIwNGQ0NjliZTNmNWZiNDM0MjI4ODQiLCJpYXQiOjE3NTYzODQ1ODJ9.uyxO4zPjAiatz-Ief6TCaFlFBT1XKYKuikMcdMLPhUg",
+ 
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGIwNGQ0NjliZTNmNWZiNDM0MjI4ODQiLCJpYXQiOjE3NTYzODQ4ODF9.14ZdnqGKVyINLZiJ81N5uyAhwp1hJcldzMYcTT9SPyk",
+"curr balance": 9923
+}
+
+{
+  "name":"user2",
+
+  "username": "testuser2@test.com",
+  "password": "abcdef",
+  "firstName": "Test",
+  "lastName": "User2",
+ 
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGIwNGY4OThhZWYxZTNmNmVkYWFiNGMiLCJpYXQiOjE3NTYzODUyMzN9.dp8b3bS46V8J5HoN8l1aqi9HRq66FrEUStGN_kud5zs",
+"curr balance": 10077
+}
+
+
+
+

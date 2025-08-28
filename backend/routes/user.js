@@ -22,7 +22,7 @@ router.post("/signup", async (req, res) => {
     console.log(req.body);
     if (!success) {
         return res.status(411).json({
-            message: "Email already taken / Incorrect inputs......"
+            message: "Incorrect inputs "
         })
     }
 
@@ -32,7 +32,7 @@ router.post("/signup", async (req, res) => {
 
     if (existingUser) {
         return res.status(411).json({
-            message: "Email already taken/Incorrect inputs exist"
+            message: "Email already taken"
         })
     }
 
@@ -46,7 +46,7 @@ router.post("/signup", async (req, res) => {
 
     await Account.create({
         userId,
-        balance: 1 + Math.random() * 10000
+        balance:10000
     })
 
     const token = jwt.sign({
@@ -70,7 +70,7 @@ router.post("/signin", async (req, res) => {
     console.log(req.body)
     if (!success) {
         return res.status(411).json({
-            message: "Email already taken / Incorrect inputs"
+            message: " Incorrect inputs"
         })
     }
 
@@ -90,9 +90,8 @@ router.post("/signin", async (req, res) => {
         return;
     }
 
-
     res.status(411).json({
-        message: "Error while logging in"
+        message: "Incorrect Credentials"
     })
 })
 
@@ -106,7 +105,7 @@ router.put("/", authMiddleware, async (req, res) => {
     const { success } = updateBody.safeParse(req.body)
     if (!success) {
         res.status(411).json({
-            message: "Error while updating information"
+            message: "Wrong input format"
         })
     }
 
@@ -117,29 +116,5 @@ router.put("/", authMiddleware, async (req, res) => {
     })
 })
 
-router.get("/bulk", async (req, res) => {
-    const filter = req.query.filter || ""
-
-    const users = await User.find({
-        $or: [{
-            firstName: {
-                $regex: new RegExp(filter, 'i')
-            }
-        }, {
-            lastName: {
-                $regex: new RegExp(filter, 'i')
-            }
-        }]
-    })
-
-    res.json({
-        user: users.map(user => ({
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            _id: user._id
-        }))
-    })
-})
 
 module.exports = router;
