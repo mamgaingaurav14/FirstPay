@@ -1,15 +1,7 @@
 // backend/db.js
-const mongoose = require('mongoose');
-const dotenv = require('dotenv')
-dotenv.config();
 
-mongoose.connect('mongodb://localhost:27017/mydb')
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((error) => {
-        console.error('Error connecting to MongoDB:', error);
-    });
+const mongoose = require('mongoose');
+
 // Create a Schema for Users
 const userSchema = new mongoose.Schema({
     username: {
@@ -48,7 +40,8 @@ const accountSchema = new mongoose.Schema({
     },
     balance: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     }
 });
 
