@@ -16,13 +16,11 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-
         req.userId = decoded.userId;
-
         next();
     } catch (err) {
         return res.status(403).json({
-            error: " Token does not matches,User not authenticated "
+            error: " Token does not matches, User not authenticated "
         });
     }
 };

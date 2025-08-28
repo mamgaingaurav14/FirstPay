@@ -15,7 +15,7 @@ app.use("/api", rootRouter);
 const PORT=process.env.PORT;
 
 app.get('/',(req,res)=>{
-    res.send('First Pay backend is running ,please test the server by third party api calls');
+    res.send('FirstPay backend is running ,please test the server by third party api calls');
 })
 
 const startServer= async()=>{
