@@ -32,8 +32,7 @@ firstpay-api/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/mamgaingaurav14/firstpay-api.git
-cd firstpay-api
+git clone https://github.com/mamgaingaurav14/FirstPay.git
 ```
 
 ### 2. Install Dependencies
