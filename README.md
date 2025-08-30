@@ -6,12 +6,9 @@ A simple backend payment api system that allows user account creation, balance m
 
 ---
 
-The backend api is live at https://first-pay-backend-api.onrender.com/
+The testing api is live at https://first-pay-backend-api.onrender.com/
 
-You can directly test the api endpoints uisng any third party application
-for eg. Postman.
-You can also use the following Credentials to save time signing up and login directly .
-
+You can directly test the api endpoints by either signup using any new credentials and or you can use testing credentials from below.
 
  User1 Id={
   "username": "testuser1@test.com" ,
@@ -23,31 +20,20 @@ You can also use the following Credentials to save time signing up and login dir
   "password": "abcdef"
   }
 
+  User 3 Id={
+  "username": "testuser3@test.com",
+  "password": "112233"
+  }
+
   ### 📌 API Endpoints
 
 ### **User**
 - `POST /api/user/signup` – Register a new user  
 - `POST /api/user/signin` – Login existing user  
 
- Post Body Structure for signin  =
-  
-  {
-    username:testuser1@test.com,
-    password:123456
-  }
-
-
 ### Account 
 - `GET /api/account/balance` – Get account balance  
 - `POST /api/account/transfer` – Transfer balance between accounts  
-
-Sender's jwt token should be in Authorization Header with Bearer 
-
-  Post Body Structure for transfer  =
-  
-  {
-    amount:money, to: receiver username
-  }
 
 ---
 
@@ -65,11 +51,13 @@ Sender's jwt token should be in Authorization Header with Bearer
 ```
 firstpay-api/
 │
-├── db.js            # MongoDB connection & schema definitions
-├── index.js         # Entry point for the application
-├── routes/          # API routes
-├── middleware.js    # auth middleware
-└── README.md        # Documentation
+├── db.js             # MongoDB connection & schema definitions
+├── index.js          # Entry point for the application
+├── routes/           # API routes
+├── middleware.js     # auth middleware
+└── Public/index.html # basic testing frontend
+└── README.md         # Documentation
+
 ```
 
 ---
@@ -111,6 +99,7 @@ npx nodemon index.js
 - **Mongoose** – ODM for MongoDB
 - **JWT** – Authentication
 - **Nodemon** – Development server
+- **HTML-CSS-JS** – Testing Frontend
 
 ---
 

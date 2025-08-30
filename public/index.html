@@ -11,11 +11,52 @@
     .hidden { display: none; }
     h2 { color: #090b0c; }
     .box { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 15px; }
+    .fixed-left-box {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+}
+.fixed-right-box {
+  position: fixed;
+  top: 20px;      /* distance from top */
+  right: 20px;    /* distance from right */
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  width: 300px;   /* optional, adjust as needed */
+}
+
   </style>
 </head>
 <body>
   <div class="container">
     <h2>FirstPay API Demo</h2>
+
+    <div class="fixed-left-box">
+      <h3>Testing Credentials</h3>
+      <pre>
+    User 1:
+    {
+      "username": "testuser1@test.com",
+      "password": "123456"
+    }
+    
+    User 2:
+    {
+      "username": "testuser2@test.com",
+      "password": "abcdef"
+    }
+    
+    User 3:
+    {
+      "username": "testuser3@test.com",
+      "password": "112233"
+    }
+      </pre>
+    </div>
 
     <!-- Sign Up Section -->
     <div id="signupBox" class="box">
@@ -36,7 +77,7 @@
     </div>
 
     <!-- Dashboard -->
-    <div id="dashboard" class="box hidden">
+    <div id="dashboard" class="fixed-right-box hidden">
       <h3>Dashboard</h3>
       <p id="balanceText">Balance: --</p>
       <button onclick="getBalance()">Refresh Balance</button>
