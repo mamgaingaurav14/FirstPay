@@ -1,7 +1,53 @@
 
 # FirstPay API
 
-A simple backend payment system that allows user account creation, balance management, and secure transactions between accounts.
+A simple backend payment api system that allows user account creation, balance management, and secure transactions between accounts.
+
+
+---
+
+The backend api is live at https://first-pay-backend-api.onrender.com/
+
+You can directly test the api endpoints uisng any third party application
+for eg. Postman.
+You can also use the following Credentials to save time signing up and login directly .
+
+
+ User1 Id={
+  "username": "testuser1@test.com" ,
+  "password": "123456"
+  }
+  
+ User 2 Id={
+  "username": "testuser2@test.com",
+  "password": "abcdef"
+  }
+
+  ### 📌 API Endpoints
+
+### **User**
+- `POST /api/user/signup` – Register a new user  
+- `POST /api/user/signin` – Login existing user  
+
+ Post Body Structure for signin  =
+  
+  {
+    username:testuser1@test.com,
+    password:123456
+  }
+
+
+### Account 
+- `GET /api/account/balance` – Get account balance  
+- `POST /api/account/transfer` – Transfer balance between accounts  
+
+Sender's jwt token should be in Authorization Header with Bearer 
+
+  Post Body Structure for transfer  =
+  
+  {
+    amount:money, to: receiver username
+  }
 
 ---
 
@@ -56,17 +102,7 @@ npx nodemon index.js
 
 ---
 
-## 📌 API Endpoints
 
-### **User**
-- `POST /api/user/signup` – Register a new user  
-- `POST /api/user/signin` – Login existing user  
-
-### **Account **
-- `GET /api/account/balance` – Get account balance  
-- `POST /api/account/transfer` – Transfer balance between accounts  
-
----
 
 ## 🛠 Tech Stack
 - **Node.js** – Backend runtime
