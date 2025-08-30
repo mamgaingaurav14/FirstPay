@@ -4,6 +4,7 @@ const cors = require("cors");
 const rootRouter = require("./routes/index");
 const mongoose=require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
 dotenv.config();
 
 const app = express();
@@ -14,8 +15,10 @@ app.use("/api", rootRouter);
 
 const PORT=process.env.PORT;
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/',(req,res)=>{
-    res.send('FirstPay backend is running ,please test the server by third party api calls');
+   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 })
 
 const startServer= async()=>{
@@ -31,7 +34,7 @@ const startServer= async()=>{
      process.exit(1);//exit with failure 
     }
  };
- 
+
  
 startServer();
 

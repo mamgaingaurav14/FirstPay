@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FirstPay Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 5px 0; padding: 8px; width: 100%; }
+    .container { max-width: 400px; margin: auto; }
+    .hidden { display: none; }
+    h2 { color: #090b0c; }
+    .box { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>FirstPay API Demo</h2>
+
+    <!-- Sign Up Section -->
+    <div id="signupBox" class="box">
+      <h3>Sign Up</h3>
+      <input type="text" id="firstName" placeholder="First Name">
+      <input type="text" id="lastName"  placeholder="Last Name">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPassword" placeholder="Password">
+      <button onclick="signUp()">Sign Up</button>
+    </div>
+
+    <!-- Sign In Section -->
+    <div id="signinBox" class="box">
+      <h3>Sign In</h3>
+      <input type="email" id="signinEmail" placeholder="Email">
+      <input type="password" id="signinPassword" placeholder="Password">
+      <button onclick="signIn()">Sign In</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="box hidden">
+      <h3>Dashboard</h3>
+      <p id="balanceText">Balance: --</p>
+      <button onclick="getBalance()">Refresh Balance</button>
+
+      <h4>Transfer Money</h4>
+      <input type="text" id="transferTo" placeholder="Receiver Email">
+      <input type="number" id="transferAmount" placeholder="Amount">
+      <button onclick="transferMoney()">Transfer</button>
+    </div>
+  </div>
+
+<script>
+const API_URL = "https://first-pay-backend-api.onrender.com";
+let token = "";
+
+// Sign Up
+async function signUp() {
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const username = document.getElementById("signupEmail").value;
+  const password = document.getElementById("signupPassword").value;
+
+  const res = await fetch(`${API_URL}/api/user/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ firstName, lastName, username, password })
+  });
+
+  const data = await res.json();
+  alert(data.message || "Sign Up Successful!");
+}
+
+// Sign In
+async function signIn() {
+  const username = document.getElementById("signinEmail").value;
+  const password = document.getElementById("signinPassword").value;
+
+  const res = await fetch(`${API_URL}/api/user/signin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+  if (data.token) {
+    token = data.token;
+    alert("Login Successful!");
+    document.getElementById("dashboard").classList.remove("hidden");
+  } else {
+    alert(data.message || "Login Failed!");
+  }
+}
+
+// Get Balance
+async function getBalance() {
+  const res = await fetch(`${API_URL}/api/account/balance`, {
+    method: "GET",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+
+  const data = await res.json();
+  document.getElementById("balanceText").innerText = `Balance: ₹${data.balance}`;
+}
+
+// Transfer Money
+async function transferMoney() {
+  const to = document.getElementById("transferTo").value;
+  const amount = parseFloat(document.getElementById("transferAmount").value);
+
+  const res = await fetch(`${API_URL}/api/account/transfer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ amount, to })
+  });
+
+  const data = await res.json();
+  alert(data.message || "Transfer Complete!");
+}
+</script>
+</body>
+</html>
